@@ -26,13 +26,23 @@ export class OrdersService {
     await this.ordersRipo.save(order);
     return order;
   }
-
-  findAll() {
-    return this.ordersRipo.find();
+  //UnUsed
+  findAll(session) {
+    const userId = session.user.id;
+    return this.ordersRipo.findByCustomer(userId);
+  }
+  //UnUsed
+  findOrders(session) {
+    const userId = session.user.id;
+    return this.ordersRipo.findByCustomerWithDate(userId);
   }
 
   findOne(id: number) {
     return this.ordersRipo.findByCustomer(id);
+  }
+
+  findOneNotNull(id: number) {
+    return this.ordersRipo.findByCustomerWithDate(id);
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {
@@ -40,6 +50,6 @@ export class OrdersService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} order`;
+    return this.ordersRipo.delete({ customerId: id, orderDate: null });
   }
 }
